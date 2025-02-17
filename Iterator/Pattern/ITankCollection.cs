@@ -7,6 +7,4 @@ public interface ITankCollection
 {
     public List<Tank> GetTanks();
     public abstract IIterator CreateMaxAlarmIterator();
-    // public ITankIterator CreateMinVolumeIterator();
-    // public ITankIterator CreateMaxVolumeIterator();
 }

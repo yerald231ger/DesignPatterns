@@ -8,7 +8,6 @@ public class TankList : ITankCollection
     
     public List<Tank> GetTanks() => _tanks;
     public void AddTank(Tank tank) => _tanks.Add(tank);
-    public void RemoveTank(Tank tank) => _tanks.Remove(tank);
 
     public IIterator CreateMaxAlarmIterator() => new MaxAlarmIterator(this);
     public IIterator CreateMinVolumeIterator() => new MinVolumeIterator(this);
