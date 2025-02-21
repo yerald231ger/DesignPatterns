@@ -4,12 +4,12 @@ using ChainOfResponsibility;
 using ChainOfResponsibility.Pattern;
 
 
-var stationSupplyTeam = new StationSupplyTeam();
+BaseStationAlarmsHandler stationSupplyTeam = new StationSupplyTeam();
 var supportTeamHandler = new SupportTeamStationAlarmsHandler();
 var maintenanceTeam = new MaintenanceTeam();
 var developerTeamHandler = new DeveloperTeamStationAlarmsHandler();
 
-var alarms = new AlarmList { "Low Product", "High Temperature", "Tcp Error", "Memory Leak", "Other" };
+var alarms = new AlarmList { "Other" };
 var request = new StationAlarmsRequest(DateTime.Now, Guid.NewGuid(), "Station 1", alarms);
 
 stationSupplyTeam
