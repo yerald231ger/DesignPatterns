@@ -6,7 +6,7 @@ namespace Facade.Pattern;
 
 public class TankInventoryFacade
 {
-    public TankInventory GetTankInventory(string source, int tankId)
+    public virtual TankInventory GetTankInventory(string source, int tankId)
     {
         ITankInventoryAdapter? adapter = source switch
         {
