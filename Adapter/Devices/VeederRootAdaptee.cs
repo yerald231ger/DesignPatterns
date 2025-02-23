@@ -14,15 +14,9 @@ public class VeederRootAdaptee
         if (!ValidateRequest(request))
             return string.Empty;
         
-        var tankId = int.TryParse(request.AsSpan(request.IndexOf("C01A|", StringComparison.Ordinal) + 5, 2), out var id) ? id : 0;
-        
-        if(tankId == 0)
-            return string.Empty;
-        
         foreach (var volume in _volumes)
         {
-            var parts = volume.Split('|');
-            if (int.Parse(parts[0]) == tankId)
+            if (volume.Contains(request))
                 return volume;
         }
         return string.Empty;

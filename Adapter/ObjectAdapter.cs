@@ -10,9 +10,10 @@ public sealed class TankInventoryVeederRootAdapter(VeederRootAdaptee adaptee) : 
     {
         try
         {
-            var data = adaptee.GetTankInventory($"C01A|{tankId.ToString()}");
+            Task.Delay(2120).Wait();
+            var data = adaptee.GetTankInventory($"C01A|{tankId:00}");
             var splitData = data.Split('|');
-            return new TankInventory(int.Parse(splitData[0]), splitData[1], int.Parse(splitData[2]));
+            return new TankInventory(int.Parse(splitData[1]), splitData[2], int.Parse(splitData[3]));
         }
         catch (Exception e)
         {
@@ -25,16 +26,17 @@ public sealed class TankInventoryVeederRootAdapter(VeederRootAdaptee adaptee) : 
 public sealed class TankInventoryFusionAdapter(FusionAdaptee adaptee) : ITankInventoryAdapter
 {
     readonly XmlSerializer _serializer = new(typeof(TankInventory));
-    
+
     public TankInventory GetTankInventory(int tankId)
     {
         try
         {
-            var data = adaptee.GetTankData($"<TankInventory><ID>{tankId.ToString()}</ID></TankInventory>");
-        
+            Task.Delay(3123).Wait();
+            var data = adaptee.GetTankData($"<TankInventory><Id>{tankId:00}</Id></TankInventory>");
+
             var reader = new StringReader(data);
             var tankInventory = (TankInventory)_serializer.Deserialize(reader)!;
-        
+
             return tankInventory;
         }
         catch (Exception e)
@@ -44,4 +46,9 @@ public sealed class TankInventoryFusionAdapter(FusionAdaptee adaptee) : ITankInv
     }
 }
 
-public record TankInventory(int Tank, string Product, decimal Volume);
+public record TankInventory(int Id, string Product, decimal Volume)
+{
+    TankInventory() : this(0, string.Empty, 0)
+    {
+    }
+}

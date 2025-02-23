@@ -13,6 +13,7 @@ internal static class Program
         ValidateTankVolume(fusionAdapter);
 
         ValidateTankVolume(fdcAdapter);
+        
         return;
 
         void ValidateTankVolume(ITankInventoryAdapter adapter)
