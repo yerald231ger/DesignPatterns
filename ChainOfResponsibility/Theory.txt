@@ -1,0 +1,28 @@
++------------------+
+|   Client         |
++------------------+
+         |
+         v
++------------------+
+| Handler          |<-----------------+
+|------------------|                  |
+| +handleRequest() |                  |
++------------------+                  |
+         ^                            |
+         |                            |
++------------------+      +------------------+
+| ConcreteHandlerA |      | ConcreteHandlerB |
+|------------------|      |------------------|
+| +handleRequest() |      | +handleRequest() |
++------------------+      +------------------+
+
+Explanation:
+1.	Handler (Abstract Class/Interface)
+	•	Declares the method handleRequest().
+	•	Maintains a reference to the next handler in the chain.
+2.	ConcreteHandlers (ConcreteHandlerA, ConcreteHandlerB, etc.)
+	•	Implement handleRequest().
+	•	Process the request or pass it to the next handler in the chain.
+3.	Client
+	•	Initiates the request.
+	•	The request is processed by the first handler, which may pass it down the chain.
