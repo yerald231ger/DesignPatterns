@@ -1,12 +1,12 @@
 namespace Mediator.Pattern;
 
-public class Rcc : IMediator
+public class Rsc : IMediator
 {
     private Pump _pump;
     private Client _client;
     private List<Task> pendingTasks = [];
     
-    public Rcc(Pump pump, Client client)
+    public Rsc(Pump pump, Client client)
     {
         _pump = pump;
         _client = client;
