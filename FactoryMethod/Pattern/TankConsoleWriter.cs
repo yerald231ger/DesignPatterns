@@ -4,7 +4,7 @@ namespace FactoryMethod.Pattern;
 
 public abstract class TankConsoleWriter
 {
-    public abstract IConsoleShapeWriter CreateConsoleShapeWriter();
+    protected abstract IConsoleShapeWriter CreateConsoleShapeWriter();
     
     public void Write(int id, string product, decimal volume, decimal capacity)
     {
@@ -30,7 +30,7 @@ public abstract class TankConsoleWriter
 
 public class HorizontalTankConsoleWriter : TankConsoleWriter
 {
-    public override IConsoleShapeWriter CreateConsoleShapeWriter()
+    protected override IConsoleShapeWriter CreateConsoleShapeWriter()
     {
         var width = 40;
         var height = 10;
@@ -40,7 +40,7 @@ public class HorizontalTankConsoleWriter : TankConsoleWriter
 
 public class VerticalTankConsoleWriter : TankConsoleWriter
 {
-    public override IConsoleShapeWriter CreateConsoleShapeWriter()
+    protected override IConsoleShapeWriter CreateConsoleShapeWriter()
     {
         var width = 25;
         var height = 14;
@@ -50,7 +50,7 @@ public class VerticalTankConsoleWriter : TankConsoleWriter
 
 public class SphericalTankConsoleWriter : TankConsoleWriter
 {
-    public override IConsoleShapeWriter CreateConsoleShapeWriter()
+    protected override IConsoleShapeWriter CreateConsoleShapeWriter()
     {
         var radius = 7;
         return new ConsoleShapeSphericalWriter(radius);
@@ -59,7 +59,7 @@ public class SphericalTankConsoleWriter : TankConsoleWriter
 
 public class VerticalColorizedTankConsoleWriter : TankConsoleWriter
 {
-    public override IConsoleShapeWriter CreateConsoleShapeWriter()
+    protected override IConsoleShapeWriter CreateConsoleShapeWriter()
     {
         var width = 25;
         var height = 14;
@@ -69,7 +69,7 @@ public class VerticalColorizedTankConsoleWriter : TankConsoleWriter
 
 public class RandomShapeHorizontalWriter : TankConsoleWriter
 {
-    public override IConsoleShapeWriter CreateConsoleShapeWriter()
+    protected override IConsoleShapeWriter CreateConsoleShapeWriter()
     {
         var random = new Random();
         var next = random.Next(1, 4);
