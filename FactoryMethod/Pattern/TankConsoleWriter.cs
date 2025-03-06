@@ -57,6 +57,16 @@ public class SphericalTankConsoleWriter : TankConsoleWriter
     }
 }
 
+public class VerticalColorizedTankConsoleWriter : TankConsoleWriter
+{
+    public override IConsoleShapeWriter CreateConsoleShapeWriter()
+    {
+        var width = 25;
+        var height = 14;
+        return new ConsoleShapeVerticalColorizedWriter(height, width);
+    }
+}
+
 public class RandomShapeHorizontalWriter : TankConsoleWriter
 {
     public override IConsoleShapeWriter CreateConsoleShapeWriter()

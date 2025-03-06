@@ -152,3 +152,60 @@ public class ConsoleShapeSphericalWriter(int radius) : IConsoleShapeWriter
     }
 }
 
+public class ConsoleShapeVerticalColorizedWriter(int height, int width) : IConsoleShapeWriter
+{
+    public void Write(int fill)
+    {
+        if (fill < 1 || fill > 10)
+        {
+            Console.WriteLine("Fill level must be between 1 and 10.");
+            return;
+        }
+
+        int fillHeight = (int)(height * (fill / 10.0)); // Compute how many rows to fill
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (y == 0 || y == height - 1 || x == 0 || x == width - 1)
+                {
+                    switch (y)
+                    {
+                        case 0 when x==0:
+                            Console.Write('┌'); // Outline of the rectangle
+                            break;
+                        case 0 when x==width-1:
+                            Console.Write('┐'); // Outline of the rectangle
+                            break;
+                        default:
+                        {
+                            if(y==height-1&& x==0)
+                                Console.Write('└'); // Outline of the rectangle
+                            else if(y==height-1&& x==width-1)
+                                Console.Write('┘'); // Outline of the rectangle
+                            else if (y == 0 || y == height - 1)
+                                Console.Write('─'); // Outline of the rectangle
+                            else if (x == 0 || x == width - 1)
+                                Console.Write('│'); // Outline of the rectangle
+                            break;
+                        }
+                    }
+                }
+                else if (y >= height - fillHeight)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.Write("█"); // Filling from bottom to top
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.Write(" "); // Empty space
+                }
+            }
+
+            Console.WriteLine();
+        }
+    }
+}
+
