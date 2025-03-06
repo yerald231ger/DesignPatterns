@@ -8,9 +8,15 @@ public abstract class TankConsoleWriter
     
     public void Write(int id, string product, decimal volume, decimal capacity)
     {
+        Console.WriteLine("───────────────────────────────────────────────────────────────");
+        Console.WriteLine();
+        Console.WriteLine($"Tanque {id} de {product}".ToUpper());
         var writer = CreateConsoleShapeWriter();
         var fillLevel = (int)(10m / capacity * volume);
         writer.Write(fillLevel);
+        Console.WriteLine($"Max Capacity: {capacity} liters");
+        Console.WriteLine($"Current Volume: {volume} liters");
+        Console.WriteLine();
     }
     
     public static List<TankConsoleWriter> GetTankConsoleWriters()
