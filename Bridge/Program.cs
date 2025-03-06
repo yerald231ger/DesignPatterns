@@ -3,8 +3,11 @@
 var horizontalTank = new Tank(TankFactory.GetTankType("Horizontal"));
 var verticalTank = new Tank(TankFactory.GetTankType("Vertical"));
 
-horizontalTank.SetFuelLevel(2);
-verticalTank.SetFuelLevel(2);
+var tanks = new[] { horizontalTank, verticalTank };
 
-horizontalTank.DisplayTankInfo();
-verticalTank.DisplayTankInfo();
+foreach (var tank in tanks)
+{
+    tank.SetFuelLevel(2);
+    tank.DisplayTankInfo();
+    Console.WriteLine($"The tank type is {nameof(tank.TankType)}");
+}

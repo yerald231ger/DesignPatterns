@@ -5,23 +5,24 @@ public class Tank(ITankType tankType)
     public decimal Volume { get; private set; }
     public decimal Temperature { get; set; }
     public int FuelLevel { get; private set; }
+    public ITankType TankType { get; } = tankType;
 
     public void SetFuelLevel(int fuelLevel)
     {
         FuelLevel = fuelLevel;
-        Volume = tankType.GetVolume(fuelLevel);
+        Volume = TankType.GetVolume(fuelLevel);
     }
     
     public void DisplayTankInfo()
     {
-        Console.WriteLine($"Tank Type: {tankType.GetType().Name}, Fuel Level: {FuelLevel}, Volume: {Volume} liters.");
+        Console.WriteLine($"Fuel Level: {FuelLevel}, Volume: {Volume} liters.");
     }
 }
 
-file class HorizontalTank(Dictionary<int, decimal> calibrationTable) : ITankType
+file class HorizontalTankType(Dictionary<int, decimal> calibrationTable) : ITankType
 {
     private Dictionary<int, decimal> CalibrationTable { get; } = calibrationTable;
-    public string Name { get; set; } = nameof(HorizontalTank);
+    public string Name { get; set; } = nameof(HorizontalTankType);
     public decimal Height { get; set; }
     public decimal Diameter { get; set; }
 
@@ -31,10 +32,10 @@ file class HorizontalTank(Dictionary<int, decimal> calibrationTable) : ITankType
     }
 }
 
-file class VerticalTank(Dictionary<int, decimal> calibrationTable) : ITankType
+file class VerticalTankType(Dictionary<int, decimal> calibrationTable) : ITankType
 {
     private Dictionary<int, decimal> CalibrationTable { get; } = calibrationTable;
-    public string Name { get; set; } = nameof(VerticalTank);
+    public string Name { get; set; } = nameof(VerticalTankType);
     public decimal Height { get; set; }
     public decimal Diameter { get; set; }
 
@@ -55,8 +56,8 @@ public static class TankFactory
     {
         return tankType switch
         {
-            "Horizontal" => new HorizontalTank(new Dictionary<int, decimal> { { 1, 200.1m }, { 2, 300m }, { 3, 400m } }),
-            "Vertical" => new VerticalTank(new Dictionary<int, decimal> { { 1, 100.1m }, { 2, 200m }, { 3, 300m } }),
+            "Horizontal" => new HorizontalTankType(new Dictionary<int, decimal> { { 1, 200.1m }, { 2, 300m }, { 3, 400m } }),
+            "Vertical" => new VerticalTankType(new Dictionary<int, decimal> { { 1, 100.1m }, { 2, 200m }, { 3, 300m } }),
             _ => throw new ArgumentOutOfRangeException(nameof(tankType), tankType, null)
         };
     }
