@@ -42,8 +42,8 @@ public class Order
     public Order()
     {
         OrderId = Guid.NewGuid();
-        OrderDetails = new List<OrderDetail>();
-        OrderPayments = new List<OrderPayment>();
+        OrderDetails = [];
+        OrderPayments = [];
         CreatedAt = DateTime.UtcNow;
         Status = "Created";
         TicketPrinted = false;
@@ -54,6 +54,9 @@ public class Order
         GasNGoId = 0;
         TicketReprintCountPanel = 0;
         Sync = true;
+        IsCoalition = "N";
+        Type = "Order";
+        TransactionId = Guid.NewGuid().ToString();
     }
 
     public void AddDetail(Product product, decimal quantity, decimal price)
