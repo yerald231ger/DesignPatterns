@@ -3,7 +3,7 @@ using PaymentMethodDescriminator.Domain.Enums;
 
 namespace PaymentMethodDescriminator.Approaches.RuleBasedApproach.Rules;
 
-public class PriceRangePaymentRule : IPaymentMethodRule
+public class PriceRangePaymentRule : IPaymentMethodSpecification
 {
     private readonly Dictionary<PaymentMethodType, (decimal min, decimal max)> _priceRanges;
 
@@ -23,5 +23,15 @@ public class PriceRangePaymentRule : IPaymentMethodRule
             return product.Price >= range.min && product.Price <= range.max;
         }
         return true;
+    }
+
+    public IPaymentMethodSpecification And(IPaymentMethodSpecification other)
+    {
+        return new AndSpecification(this, other);
+    }
+
+    public IPaymentMethodSpecification Or(IPaymentMethodSpecification other)
+    {
+        return new OrSpecification(this, other);
     }
 } 

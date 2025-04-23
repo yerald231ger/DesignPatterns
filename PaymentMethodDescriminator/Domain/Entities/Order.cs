@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,54 +6,73 @@ namespace PaymentMethodDescriminator.Domain.Entities;
 
 public class Order
 {
-    private readonly List<OrderDetail> _orderDetails;
-    private readonly List<OrderPayment> _orderPayments;
+    public Guid OrderId { get; set; }
+    public string Type { get; set; }
+    public int StationId { get; set; }
+    public int Pump { get; set; }
+    public int? AdministrativeDayId { get; set; }
+    public DateTime? AdministrativeDay { get; set; }
+    public long OrderNumber { get; set; }
+    public decimal Total { get; set; }
+    public decimal Tip { get; set; }
+    public bool TicketPrinted { get; set; }
+    public string Status { get; set; }
+    public bool HasDispatch { get; set; }
+    public bool HasManyPayment { get; set; }
+    public int CountItem { get; set; }
+    public DateTime? CutOffDate { get; set; }
+    public int CountPrinted { get; set; }
+    public int GasNGoId { get; set; }
+    public int? LiquidationDetailId { get; set; }
+    public int? EmployeeNumber { get; set; }
+    public string TransactionId { get; set; }
+    public string IsCoalition { get; set; }
+    public byte TicketReprintCountPanel { get; set; }
+    public int Folio { get; set; }
+    public long ConsecutiveFolio { get; set; }
+    public int? FleetFolio { get; set; }
+    public bool Sync { get; set; }
+    public Guid? InvoiceUuid { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public Guid Id { get; private set; }
-    public string Folio { get; private set; }
-    public DateTime CreationDate { get; private set; }
-    public decimal Subtotal { get; private set; }
-    public decimal Tax { get; private set; }
-    public decimal Total { get; private set; }
-    public string Status { get; private set; }
+    public ICollection<OrderDetail> OrderDetails { get; set; }
+    public ICollection<OrderPayment> OrderPayments { get; set; }
 
-    public IReadOnlyCollection<OrderDetail> OrderDetails => _orderDetails.AsReadOnly();
-    public IReadOnlyCollection<OrderPayment> OrderPayments => _orderPayments.AsReadOnly();
-
-    public Order(string folio)
+    public Order()
     {
-        Id = Guid.NewGuid();
-        Folio = folio;
-        CreationDate = DateTime.UtcNow;
+        OrderId = Guid.NewGuid();
+        OrderDetails = new List<OrderDetail>();
+        OrderPayments = new List<OrderPayment>();
+        CreatedAt = DateTime.UtcNow;
         Status = "Created";
-        _orderDetails = new List<OrderDetail>();
-        _orderPayments = new List<OrderPayment>();
+        TicketPrinted = false;
+        HasDispatch = false;
+        HasManyPayment = false;
+        CountItem = 0;
+        CountPrinted = 0;
+        GasNGoId = 0;
+        TicketReprintCountPanel = 0;
+        Sync = true;
     }
 
-    public void AddOrderDetail(Product product, int quantity, decimal unitPrice)
+    public void AddDetail(Product product, decimal quantity, decimal price)
     {
-        var orderDetail = new OrderDetail(this, product, quantity, unitPrice);
-        _orderDetails.Add(orderDetail);
-        RecalculateOrderTotals();
+        var detail = new OrderDetail(product, quantity, price);
+        OrderDetails.Add(detail);
+        CountItem = OrderDetails.Count;
+        RecalculateTotal();
     }
 
-    public void AddPayment(PaymentMethod paymentMethod, decimal amount, string? transactionReference = null)
+    public void AddPayment(PaymentMethod paymentMethod, decimal amount)
     {
-        var payment = new OrderPayment(this, paymentMethod, amount, transactionReference);
-        _orderPayments.Add(payment);
+        var payment = new OrderPayment(paymentMethod, amount);
+        OrderPayments.Add(payment);
+        HasManyPayment = OrderPayments.Count > 1;
     }
 
-    private void RecalculateOrderTotals()
+    private void RecalculateTotal()
     {
-        Subtotal = _orderDetails.Sum(x => x.Subtotal);
-        Tax = _orderDetails.Sum(x => x.Tax);
-        Total = _orderDetails.Sum(x => x.Total);
-    }
-
-    // Protected constructor for EF Core
-    protected Order() 
-    {
-        _orderDetails = new List<OrderDetail>();
-        _orderPayments = new List<OrderPayment>();
+        Total = OrderDetails.Sum(d => d.Total);
     }
 } 

@@ -1,38 +1,36 @@
+using System;
+
 namespace PaymentMethodDescriminator.Domain.Entities;
 
 public class OrderDetail
 {
-    public Guid Id { get; private set; }
-    public Guid OrderId { get; private set; }
-    public Guid ProductId { get; private set; }
-    public int Quantity { get; private set; }
-    public decimal UnitPrice { get; private set; }
-    public decimal Subtotal { get; private set; }
-    public decimal Tax { get; private set; }
-    public decimal Total { get; private set; }
+    public Guid OrderDetailId { get; set; }
+    public decimal Quantity { get; set; }
+    public decimal Total { get; set; }
+    public decimal Price { get; set; }
+    public Guid? DispatchId { get; set; }
+    public int ProductId { get; set; }
+    public string ProductName { get; set; }
+    public string CategoryName { get; set; }
+    public Guid OrderId { get; set; }
+    public int? LocationId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public Order Order { get; private set; }
-    public Product Product { get; private set; }
+    public Order Order { get; set; }
+    public Product Product { get; set; }
 
-    public OrderDetail(Order order, Product product, int quantity, decimal unitPrice)
+    public OrderDetail(Product product, decimal quantity, decimal price)
     {
-        Id = Guid.NewGuid();
-        Order = order;
-        OrderId = order.Id;
-        Product = product;
-        ProductId = product.Id;
+        OrderDetailId = Guid.NewGuid();
+        ProductId = product.ProductId;
+        ProductName = product.Name;
+        CategoryName = product.Category.Name;
         Quantity = quantity;
-        UnitPrice = unitPrice;
-        CalculateAmounts();
+        Price = price;
+        Total = quantity * price;
+        CreatedAt = DateTime.UtcNow;
     }
 
-    private void CalculateAmounts()
-    {
-        Subtotal = Quantity * UnitPrice;
-        Tax = Subtotal * 0.16m; // Assuming 16% tax rate
-        Total = Subtotal + Tax;
-    }
-
-    // Protected constructor for EF Core
     protected OrderDetail() { }
 } 

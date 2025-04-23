@@ -1,5 +1,6 @@
 using PaymentMethodDescriminator.Approaches.ChainOfResponsibility.Handlers;
 using PaymentMethodDescriminator.Domain.Entities;
+using PaymentMethodDescriminator.Domain.Repositories;
 
 namespace PaymentMethodDescriminator.Approaches.ChainOfResponsibility.Services;
 
@@ -7,15 +8,13 @@ public class ChainPaymentService
 {
     private readonly IPaymentMethodHandler _handler;
 
-    public ChainPaymentService()
+    public ChainPaymentService(ICategoryPaymentRuleRepository repository)
     {
-        // Set up the chain
-        var priceHandler = new PriceRangeHandler();
-        var categoryHandler = new CategoryHandler();
-        
-        priceHandler.SetNext(categoryHandler);
-        
-        _handler = priceHandler;
+        var categoryHandler = new CategoryHandler(repository);
+        var priceRangeHandler = new PriceRangeHandler();
+
+        categoryHandler.SetNext(priceRangeHandler);
+        _handler = categoryHandler;
     }
 
     public bool ValidatePaymentMethod(Product product, PaymentMethod paymentMethod)

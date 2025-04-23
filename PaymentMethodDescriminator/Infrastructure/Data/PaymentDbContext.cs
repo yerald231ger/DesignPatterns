@@ -15,7 +15,16 @@ public class PaymentDbContext : DbContext
         _dbPath = Path.Join(path, "payment_rules.db");
     }
 
-    public DbSet<CategoryPaymentRule> CategoryPaymentRules { get; set; }
+    public PaymentDbContext(DbContextOptions<PaymentDbContext> options)
+        : base(options)
+    {
+        _dbPath = ":memory:";
+    }
+
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<PaymentMethod> PaymentMethods { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<CategoryPaymentMethodRule> CategoryPaymentMethodRules { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -24,20 +33,40 @@ public class PaymentDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CategoryPaymentRule>(entity =>
+        modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Category).IsRequired();
-            entity.Property(e => e.PaymentMethodType).IsRequired();
+            entity.HasKey(e => e.CategoryId);
+            entity.Property(e => e.Name).IsRequired();
             entity.Property(e => e.IsActive).HasDefaultValue(true);
+        });
 
-            // Seed initial data
-            entity.HasData(
-                new CategoryPaymentRule { Id = 1, Category = "Food", PaymentMethodType = PaymentMethodType.Cash, IsActive = true },
-                new CategoryPaymentRule { Id = 2, Category = "Food", PaymentMethodType = PaymentMethodType.SodexoVoucher, IsActive = true },
-                new CategoryPaymentRule { Id = 3, Category = "Electronics", PaymentMethodType = PaymentMethodType.CreditCard, IsActive = true },
-                new CategoryPaymentRule { Id = 4, Category = "Electronics", PaymentMethodType = PaymentMethodType.DebitCard, IsActive = true }
-            );
+        modelBuilder.Entity<PaymentMethod>(entity =>
+        {
+            entity.HasKey(e => e.PaymentMethodId);
+            entity.Property(e => e.Name).IsRequired();
+            entity.Property(e => e.MethodType).IsRequired();
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+        });
+
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.HasKey(e => e.ProductId);
+            entity.Property(e => e.Name).IsRequired();
+            entity.Property(e => e.CategoryId).IsRequired();
+            entity.HasOne(e => e.Category)
+                  .WithMany()
+                  .HasForeignKey(e => e.CategoryId);
+        });
+
+        modelBuilder.Entity<CategoryPaymentMethodRule>(entity =>
+        {
+            entity.HasKey(e => e.RuleId);
+            entity.HasOne(e => e.Category)
+                  .WithMany(c => c.PaymentMethodRules)
+                  .HasForeignKey(e => e.CategoryId);
+            entity.HasOne(e => e.PaymentMethod)
+                  .WithMany(p => p.CategoryRules)
+                  .HasForeignKey(e => e.PaymentMethodId);
         });
     }
 } 

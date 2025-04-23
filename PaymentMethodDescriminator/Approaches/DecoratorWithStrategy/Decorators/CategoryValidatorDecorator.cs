@@ -7,9 +7,7 @@ public class CategoryValidatorDecorator : PaymentMethodValidatorDecorator
 {
     private readonly ICategoryStrategy _categoryStrategy;
 
-    public CategoryValidatorDecorator(
-        IPaymentMethodValidator validator, 
-        ICategoryStrategy categoryStrategy) 
+    public CategoryValidatorDecorator(IPaymentMethodValidator validator, ICategoryStrategy categoryStrategy)
         : base(validator)
     {
         _categoryStrategy = categoryStrategy;
@@ -17,7 +15,7 @@ public class CategoryValidatorDecorator : PaymentMethodValidatorDecorator
 
     public override bool IsValid(Product product, PaymentMethod paymentMethod)
     {
-        if (!_categoryStrategy.IsValidForCategory(product.Category, paymentMethod.Type))
+        if (!_categoryStrategy.IsValidForCategory(product.Category.Name, paymentMethod.Type))
             return false;
 
         return base.IsValid(product, paymentMethod);

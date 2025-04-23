@@ -2,6 +2,10 @@ using PaymentMethodDescriminator.Approaches.ChainOfResponsibility.Handlers;
 using PaymentMethodDescriminator.Approaches.ChainOfResponsibility.Services;
 using PaymentMethodDescriminator.Domain.Entities;
 using PaymentMethodDescriminator.Domain.Enums;
+using PaymentMethodDescriminator.Domain.Repositories;
+using PaymentMethodDescriminator.Infrastructure.Repositories;
+using PaymentMethodDescriminator.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace PaymentMethodDescriminator.Tests;
@@ -9,10 +13,39 @@ namespace PaymentMethodDescriminator.Tests;
 public class ChainOfResponsibilityTests
 {
     private readonly ChainPaymentService _service;
+    private readonly ICategoryPaymentRuleRepository _repository;
+    private readonly PaymentDbContext _dbContext;
 
     public ChainOfResponsibilityTests()
     {
-        _service = new ChainPaymentService();
+        var options = new DbContextOptionsBuilder<PaymentDbContext>()
+            .UseSqlite("DataSource=:memory:")
+            .Options;
+
+        _dbContext = new PaymentDbContext(options);
+        _dbContext.Database.OpenConnection();
+        _dbContext.Database.EnsureCreated();
+
+        // Seed initial data
+        var foodCategory = new Category { Name = "Food" };
+        var electronicsCategory = new Category { Name = "Electronics" };
+        _dbContext.Categories.AddRange(foodCategory, electronicsCategory);
+
+        var cashPayment = new PaymentMethod(PaymentMethodType.Cash, "Cash");
+        var creditCardPayment = new PaymentMethod(PaymentMethodType.CreditCard, "Credit Card");
+        var sodexoPayment = new PaymentMethod(PaymentMethodType.SodexoVoucher, "Sodexo");
+        _dbContext.PaymentMethods.AddRange(cashPayment, creditCardPayment, sodexoPayment);
+
+        _dbContext.CategoryPaymentMethodRules.AddRange(
+            new CategoryPaymentMethodRule { Category = foodCategory, PaymentMethod = cashPayment, IsActive = true },
+            new CategoryPaymentMethodRule { Category = foodCategory, PaymentMethod = sodexoPayment, IsActive = true },
+            new CategoryPaymentMethodRule { Category = electronicsCategory, PaymentMethod = creditCardPayment, IsActive = true }
+        );
+
+        _dbContext.SaveChanges();
+
+        _repository = new CategoryPaymentRuleRepository(_dbContext);
+        _service = new ChainPaymentService(_repository);
     }
 
     [Fact]

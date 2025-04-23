@@ -4,7 +4,7 @@ namespace PaymentMethodDescriminator.Approaches.ChainOfResponsibility.Handlers;
 
 public abstract class AbstractPaymentMethodHandler : IPaymentMethodHandler
 {
-    private IPaymentMethodHandler _nextHandler;
+    private IPaymentMethodHandler? _nextHandler;
 
     public IPaymentMethodHandler SetNext(IPaymentMethodHandler handler)
     {
