@@ -1,64 +1,98 @@
+using Bridge.Pattern;
+
 namespace Bridge;
 
-public class Tank(ITankType tankType)
+public abstract class TankDisplay
 {
-    public decimal Volume { get; private set; }
-    public decimal Temperature { get; set; }
-    public int FuelLevel { get; private set; }
-    public ITankType TankType { get; } = tankType;
+    protected ITankRenderer _renderer;
+    protected string _tankId;
+    protected string _product;
+    protected decimal _volume;
+    protected decimal _capacity;
 
-    public void SetFuelLevel(int fuelLevel)
+    protected TankDisplay(ITankRenderer renderer, string tankId, string product, decimal capacity)
     {
-        FuelLevel = fuelLevel;
-        Volume = TankType.GetVolume(fuelLevel);
+        _renderer = renderer;
+        _tankId = tankId;
+        _product = product;
+        _capacity = capacity;
+        _volume = 0;
     }
+
+    public virtual void SetVolume(decimal volume)
+    {
+        _volume = Math.Min(volume, _capacity);
+    }
+
+    public abstract void Display();
     
-    public void DisplayTankInfo()
+    public virtual void ShowFuelLevel()
     {
-        Console.WriteLine($"Fuel Level: {FuelLevel}, Volume: {Volume} liters.");
+        var percentage = (_volume / _capacity) * 100;
+        var level = (int)(percentage / 10);
+        _renderer.RenderFuelLevel(level, percentage);
     }
 }
 
-file class HorizontalTankType(Dictionary<int, decimal> calibrationTable) : ITankType
+public class StandardTankDisplay : TankDisplay
 {
-    private Dictionary<int, decimal> CalibrationTable { get; } = calibrationTable;
-    public string Name { get; set; } = nameof(HorizontalTankType);
-    public decimal Height { get; set; }
-    public decimal Diameter { get; set; }
-
-    public decimal GetVolume(int fuelLevel)
+    public StandardTankDisplay(ITankRenderer renderer, string tankId, string product, decimal capacity)
+        : base(renderer, tankId, product, capacity)
     {
-        return CalibrationTable[fuelLevel];
+    }
+
+    public override void Display()
+    {
+        _renderer.RenderTank(_tankId, _product, _volume, _capacity);
     }
 }
 
-file class VerticalTankType(Dictionary<int, decimal> calibrationTable) : ITankType
+public class DetailedTankDisplay : TankDisplay
 {
-    private Dictionary<int, decimal> CalibrationTable { get; } = calibrationTable;
-    public string Name { get; set; } = nameof(VerticalTankType);
-    public decimal Height { get; set; }
-    public decimal Diameter { get; set; }
+    private readonly DateTime _lastUpdate;
+    private readonly List<string> _alarms;
 
-    public decimal GetVolume(int fuelLevel)
+    public DetailedTankDisplay(ITankRenderer renderer, string tankId, string product, decimal capacity)
+        : base(renderer, tankId, product, capacity)
     {
-        return CalibrationTable[fuelLevel];
+        _lastUpdate = DateTime.Now;
+        _alarms = new List<string>();
+        
+        CheckAlarms();
     }
-}
 
-public interface ITankType
-{
-    public abstract decimal GetVolume(int fuelLevel);
-}
-
-public static class TankFactory
-{
-    public static ITankType GetTankType(string tankType)
+    public override void SetVolume(decimal volume)
     {
-        return tankType switch
+        base.SetVolume(volume);
+        CheckAlarms();
+    }
+
+    private void CheckAlarms()
+    {
+        _alarms.Clear();
+        var percentage = (_volume / _capacity) * 100;
+        
+        if (percentage < 10)
+            _alarms.Add("LOW FUEL WARNING");
+        if (percentage > 95)
+            _alarms.Add("HIGH FUEL WARNING");
+        if (percentage == 0)
+            _alarms.Add("EMPTY TANK");
+    }
+
+    public override void Display()
+    {
+        _renderer.RenderTank(_tankId, _product, _volume, _capacity);
+        
+        if (_alarms.Any())
         {
-            "Horizontal" => new HorizontalTankType(new Dictionary<int, decimal> { { 1, 200.1m }, { 2, 300m }, { 3, 400m } }),
-            "Vertical" => new VerticalTankType(new Dictionary<int, decimal> { { 1, 100.1m }, { 2, 200m }, { 3, 300m } }),
-            _ => throw new ArgumentOutOfRangeException(nameof(tankType), tankType, null)
-        };
+            Console.WriteLine("ALARMS:");
+            foreach (var alarm in _alarms)
+            {
+                Console.WriteLine($"⚠️  {alarm}");
+            }
+        }
+        
+        Console.WriteLine($"Last Updated: {_lastUpdate:HH:mm:ss}");
     }
 }

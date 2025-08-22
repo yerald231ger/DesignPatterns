@@ -2,101 +2,120 @@ using Flywight.Pattern;
 
 namespace Flywight;
 
-public class FuelSaleFlyWeight
+public class FuelSaleWithFlyweight(FuelType fuelType, FuelSaleContext context)
 {
-    public Guid Id { get; set; }
-    public FlyWeight FlyWeight { get; set; }
-    
-    public static List<FuelSaleFlyWeight> GenerateSalesFlyWeight(int count)
+    private readonly IFuelTypeFlyweight _fuelTypeFlyweight = FuelTypeFlyweightFactory.GetFuelTypeFlyweight(fuelType);
+
+    public decimal CalculateAmount()
     {
-        var sales = new List<FuelSaleFlyWeight>();
+        return _fuelTypeFlyweight.CalculateAmount(context.Volume, context.PricePerLiter);
+    }
+
+    public string GetDisplayInfo()
+    {
+        return _fuelTypeFlyweight.GetDisplayInfo(context);
+    }
+
+    public static List<FuelSaleWithFlyweight> GenerateSalesWithFlyweight(int count)
+    {
+        var sales = new List<FuelSaleWithFlyweight>();
+        var random = new Random();
+        var fuelTypes = Enum.GetValues<FuelType>();
 
         for (var i = 0; i < count; i++)
         {
-            var sale = new FuelSaleFlyWeight
+            var fuelType = fuelTypes[random.Next(fuelTypes.Length)];
+            var context = new FuelSaleContext
             {
-                Id = Guid.NewGuid(),
-                FlyWeight = FlyWeightFactory.GetFlyWeight(
-                    ProductType.Create(Product.Diesel),
-                    SaleType.Sale,
-                    100,
-                    2000,
-                    1,
-                    2
-                )
+                SaleId = Guid.NewGuid(),
+                SaleDateTime = DateTime.Now.AddMinutes(-random.Next(1440)), // Last 24 hours
+                PumpNumber = (short)random.Next(1, 13), // Pumps 1-12
+                HoseNumber = (short)random.Next(1, 5), // Hoses 1-4
+                Volume = Math.Round((decimal)(random.NextDouble() * 80 + 5), 2), // 5-85 liters
+                PricePerLiter = fuelType switch
+                {
+                    FuelType.Premium => 24.50m,
+                    FuelType.Magna => 22.30m,
+                    FuelType.Diesel => 25.20m,
+                    _ => 20.00m
+                },
+                CustomerCode = $"CUST{random.Next(1000, 9999)}"
             };
-            
-            sales.Add(sale);
+
+            sales.Add(new FuelSaleWithFlyweight(fuelType, context));
         }
 
         return sales;
     }
 }
 
-public class FuelSale
+public class FuelSaleWithoutFlyweight
 {
-    public Guid Id { get; set; }
-    public ProductType ProductType { get; set; }
-    public SaleType SaleType { get; set; }
-    public decimal Volume { get; set; }
-    public decimal Amount { get; set; }
+    public Guid SaleId { get; set; }
+    public DateTime SaleDateTime { get; set; }
     public short PumpNumber { get; set; }
     public short HoseNumber { get; set; }
-        
-    public static List<FuelSale> GenerateSales(int count)
+    public decimal Volume { get; set; }
+    public decimal PricePerLiter { get; set; }
+    public string CustomerCode { get; set; } = string.Empty;
+    
+    // Duplicated fuel type data (intrinsic state stored in each object)
+    public string FuelName { get; set; } = string.Empty;
+    public string FuelCode { get; set; } = string.Empty;
+    public string FuelColor { get; set; } = string.Empty;
+
+    public decimal CalculateAmount()
     {
-        var sales = new List<FuelSale>();
+        return Volume * PricePerLiter;
+    }
+
+    public string GetDisplayInfo()
+    {
+        return $"[{FuelCode}] {FuelName} ({FuelColor}) - " +
+               $"Sale ID: {SaleId} | " +
+               $"Pump: {PumpNumber} | " +
+               $"Volume: {Volume:F2}L | " +
+               $"Amount: ${CalculateAmount():F2}";
+    }
+
+    public static List<FuelSaleWithoutFlyweight> GenerateSalesWithoutFlyweight(int count)
+    {
+        var sales = new List<FuelSaleWithoutFlyweight>();
+        var random = new Random();
+        var fuelTypes = Enum.GetValues<FuelType>();
 
         for (var i = 0; i < count; i++)
         {
-            var sale = new FuelSale
+            var fuelType = fuelTypes[random.Next(fuelTypes.Length)];
+            var (name, code, color) = fuelType switch
             {
-                Id = Guid.NewGuid(),
-                ProductType = ProductType.Create(Product.Diesel),
-                SaleType = SaleType.Sale,
-                Volume = 100,
-                Amount = 2000,
-                PumpNumber = 1,
-                HoseNumber = 2
+                FuelType.Premium => ("Premium Gasoline", "PRM", "Gold"),
+                FuelType.Magna => ("Magna Gasoline", "MAG", "Green"),
+                FuelType.Diesel => ("Diesel Fuel", "DSL", "Blue"),
+                _ => ("Unknown", "UNK", "Gray")
             };
-            
-            sales.Add(sale);
+
+            sales.Add(new FuelSaleWithoutFlyweight
+            {
+                SaleId = Guid.NewGuid(),
+                SaleDateTime = DateTime.Now.AddMinutes(-random.Next(1440)),
+                PumpNumber = (short)random.Next(1, 13),
+                HoseNumber = (short)random.Next(1, 5),
+                Volume = Math.Round((decimal)(random.NextDouble() * 80 + 5), 2),
+                PricePerLiter = fuelType switch
+                {
+                    FuelType.Premium => 24.50m,
+                    FuelType.Magna => 22.30m,
+                    FuelType.Diesel => 25.20m,
+                    _ => 20.00m
+                },
+                CustomerCode = $"CUST{random.Next(1000, 9999)}",
+                FuelName = name,
+                FuelCode = code,
+                FuelColor = color
+            });
         }
 
         return sales;
     }
-}
-
-public record Nombre {}
-
-public struct ProductType
-{
-    public Product Product { get; set; }
-    public string Name { get; set; }
-    
-    public static ProductType Create(Product product)
-    {
-        return product switch
-        {
-            Product.Diesel => new ProductType { Product = Product.Diesel, Name = "Diesel" },
-            Product.Magna => new ProductType { Product = Product.Magna, Name = "Magna" },
-            Product.Premium => new ProductType { Product = Product.Premium, Name = "Premium" },
-            _ => new ProductType { Product = Product.Diesel, Name = "Unknown" }
-        };
-    }
-}
-
-public enum Product
-{
-    Diesel,
-    Magna,
-    Premium
-}
-
-public enum SaleType
-{
-    Sale,
-    Jar,
-    AutoJar,
-    Service
 }

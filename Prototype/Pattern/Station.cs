@@ -63,8 +63,14 @@ public class Station
     {
         var station = new Station
         {
-            Tanks = Tanks,
-            Pumps = Pumps
+            StationId = StationId,
+            Name = Name,
+            Description = Description,
+            Latitude = Latitude,
+            Longitude = Longitude,
+            Pl = Pl,
+            Tanks = new List<(int Id, string Product)>(Tanks),
+            Pumps = new List<(int Id, string Product)>(Pumps)
         };
         return station;
     }

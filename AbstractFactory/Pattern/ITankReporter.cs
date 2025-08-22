@@ -1,4 +1,4 @@
-namespace AbstractFactory.TankWriters;
+namespace AbstractFactory.Pattern;
 
 public interface ITankReporter
 {

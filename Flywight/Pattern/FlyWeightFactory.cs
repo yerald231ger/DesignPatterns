@@ -1,29 +1,42 @@
 namespace Flywight.Pattern;
 
-public class FlyWeightFactory
+public class FuelTypeFlyweightFactory
 {
-    private static readonly Dictionary<string, FlyWeight> _flyweights = new Dictionary<string, FlyWeight>();
+    private static readonly Dictionary<FuelType, IFuelTypeFlyweight> _flyweights = new();
 
-    public static FlyWeight GetFlyWeight(ProductType productType, SaleType saleType, decimal volume, decimal amount, short pumpNumber, short hoseNumber)
+    public static IFuelTypeFlyweight GetFuelTypeFlyweight(FuelType fuelType)
     {
-        var key = $"{productType.Name}-{saleType}-{volume}-{amount}-{pumpNumber}-{hoseNumber}";
-
-        if (_flyweights.ContainsKey(key))
+        if (_flyweights.TryGetValue(fuelType, out var existingFlyweight))
         {
-            return _flyweights[key];
+            return existingFlyweight;
         }
 
-        var flyweight = new FlyWeight
+        var flyweight = fuelType switch
         {
-            ProductType = productType,
-            SaleType = saleType,
-            Volume = volume,
-            Amount = amount,
-            PumpNumber = pumpNumber,
-            HoseNumber = hoseNumber
+            FuelType.Premium => new FuelTypeFlyweight("Premium Gasoline", "PRM", "Gold"),
+            FuelType.Magna => new FuelTypeFlyweight("Magna Gasoline", "MAG", "Green"),
+            FuelType.Diesel => new FuelTypeFlyweight("Diesel Fuel", "DSL", "Blue"),
+            _ => throw new ArgumentException($"Unknown fuel type: {fuelType}")
         };
 
-        _flyweights.Add(key, flyweight);
+        _flyweights[fuelType] = flyweight;
         return flyweight;
     }
+
+    public static int GetFlyweightCount()
+    {
+        return _flyweights.Count;
+    }
+
+    public static void ClearCache()
+    {
+        _flyweights.Clear();
+    }
+}
+
+public enum FuelType
+{
+    Premium,
+    Magna,
+    Diesel
 }
