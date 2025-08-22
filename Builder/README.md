@@ -5,30 +5,30 @@
 ┌──────────────────┐
 │   Client         │
 └──────────────────┘
-         │
-         v
+         │ uses
+         ↓
 ┌──────────────────┐
-│ IGasStationDirector │←─────────────────┐
+│ IGasStationDirector │←─────────────────┐ implements
 ├──────────────────┤                     │
 │ +BuildGasStation()│                     │
 └──────────────────┘                     │
-         ↑                               │
+         ↑ implements                    │
          │                               │
 ┌──────────────────┐      ┌──────────────────┐
 │ StandardDirector │      │ HighVolumeDirector│
 ├──────────────────┤      ├──────────────────┤
 │ +BuildGasStation()│      │ +BuildGasStation()│
 └──────────────────┘      └──────────────────┘
-         │                               │
-         v                               v
+         │ uses                          │ uses
+         ↓                               ↓
 ┌──────────────────┐      ┌──────────────────┐
 │ StationBuilder   │      │ StationBuilder   │
 ├──────────────────┤      ├──────────────────┤
 │ +CreateDefault() │      │ +CreateDefault() │
 │ +Build()         │      │ +Build()         │
 └──────────────────┘      └──────────────────┘
-         │
-         v
+         │ creates
+         ↓
 ┌──────────────────┐
 │     Station      │
 ├──────────────────┤

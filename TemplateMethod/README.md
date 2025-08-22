@@ -5,10 +5,10 @@
 ┌──────────────────┐
 │     Client       │
 └──────────────────┘
-         │
+         │ uses
          ↓
 ┌──────────────────┐
-│DefaultTemplateMethod│←─────────────────────┐
+│DefaultTemplateMethod│←─────────────────────┐ extends
 │   (AbstractClass)│                     │
 ├──────────────────┤                     │
 │ +GenerateQuote() │                     │
@@ -16,7 +16,7 @@
 │ +Calculate()     │                     │
 │ +FormatOutput()  │                     │
 └──────────────────┘                     │
-         ↑                               │
+         ↑ extends                        │
          │                               │
 ┌──────────────────┐      ┌──────────────────┐
 │   BasicQuote     │      │   PineQuote      │

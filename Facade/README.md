@@ -5,7 +5,7 @@
 ┌──────────────────┐
 │     Client       │
 └──────────────────┘
-         │
+         │ uses
          ↓
 ┌──────────────────┐
 │TankInventoryFacade│
@@ -15,7 +15,7 @@
 │ +GenerateReport()│
 └──────────────────┘
          │
-         │ simplifies
+         │ uses
          ↓
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │   TankReader     │    │   TankWriter     │    │  ReportGenerator │
@@ -23,7 +23,7 @@
 │ +ReadLevel()     │    │ +WriteData()     │    │ +CreateReport()  │
 │ +ReadTemperature()│    │ +UpdateStatus()  │    │ +FormatData()    │
 └──────────────────┘    └──────────────────┘    └──────────────────┘
-         │                       │                       │
+         │ uses                  │ uses                  │ uses
          ↓                       ↓                       ↓
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │   Database       │    │   FileSystem     │    │   EmailService   │

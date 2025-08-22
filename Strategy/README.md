@@ -5,7 +5,7 @@
 ┌──────────────────┐
 │     Client       │
 └──────────────────┘
-         │
+         │ uses
          ↓
 ┌──────────────────┐
 │      Tank        │
@@ -19,12 +19,12 @@
          │ uses
          ↓
 ┌──────────────────┐
-│ICalculateTcStrategy│←─────────────────┐
+│ICalculateTcStrategy│←─────────────────┐ implements
 │   (Strategy)     │                   │
 ├──────────────────┤                   │
 │ +Calculate()     │                   │
 └──────────────────┘                   │
-         ↑                             │
+         ↑ implements                  │
          │                             │
 ┌──────────────────┐      ┌──────────────────┐
 │ GasolineStrategy │      │ DieselStrategy   │

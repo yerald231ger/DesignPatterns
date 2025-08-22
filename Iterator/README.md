@@ -5,14 +5,14 @@
 ┌──────────────────┐
 │     Client       │
 └──────────────────┘
-         │
+         │ uses
          ↓
 ┌──────────────────┐
-│ ITankCollection  │←─────────────────┐
+│ ITankCollection  │←─────────────────┐ implements
 ├──────────────────┤                  │
 │ +CreateIterator()│                  │
 └──────────────────┘                  │
-         ↑                            │
+         ↑ implements                 │
          │                            │
 ┌──────────────────┐      ┌──────────────────┐
 │ TankCollection   │      │    IIterator     │
@@ -20,8 +20,8 @@
 │ +CreateIterator()│      │ +HasNext()       │
 │ -tanks[]         │      │ +Next()          │
 └──────────────────┘      └──────────────────┘
-         │                            ↑
-         │ creates                    │
+         │ creates                    ↑ implements
+         │                            │
          ↓                            │
 ┌──────────────────┐      ┌──────────────────┐
 │ MaxAlarmIterator │      │ MaxTemperature   │
@@ -30,7 +30,7 @@
 │ +Next()          │      │ +HasNext()       │
 └──────────────────┘      │ +Next()          │
                           └──────────────────┘
-                                   │
+                                   │ implements
                           ┌──────────────────┐
                           │ MinVolumeIterator│
                           ├──────────────────┤

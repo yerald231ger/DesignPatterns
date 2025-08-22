@@ -5,14 +5,14 @@
 ┌──────────────────┐
 │     Client       │
 └──────────────────┘
-         │
+         │ uses
          ↓
 ┌──────────────────┐
-│IGasStationService│←─────────────────┐
+│IGasStationService│←─────────────────┐ implements
 ├──────────────────┤                  │
 │ +PerformService()│                  │
 └──────────────────┘                  │
-         ↑                            │
+         ↑ implements                 │
          │                            │
 ┌──────────────────┐      ┌──────────────────┐
 │   FuelDispense   │      │BaseServiceDecorator│
@@ -21,7 +21,7 @@
 │ +PerformService()│      │ +PerformService()│
 └──────────────────┘      │ -component       │
                           └──────────────────┘
-                                   ↑
+                                   ↑ extends
                                    │
          ┌─────────────────────────┼─────────────────────────┐
          │                                                 │

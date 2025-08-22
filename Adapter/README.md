@@ -5,14 +5,14 @@
 ┌──────────────────┐
 │     Client       │
 └──────────────────┘
-         │
+         │ uses
          ↓
 ┌──────────────────┐
-│ITankInventoryAdapter│←─────────────────┐
+│ITankInventoryAdapter│←─────────────────┐ implements
 ├──────────────────┤                     │
 │ +GetInventory()  │                     │
 └──────────────────┘                     │
-         ↑                               │
+         ↑ implements                    │
          │                               │
 ┌──────────────────┐      ┌──────────────────┐
 │ ObjectAdapter    │      │ (Other Adapters) │

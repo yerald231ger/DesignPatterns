@@ -19,7 +19,7 @@
 ├──────────────────┤      ├──────────────────┤
 │ +Operation()     │      │ +Operation()     │
 │ +CheckAccess()   │      │ -data            │
-│ -realService     │      └──────────────────┘
+│ -realService     │ uses └──────────────────┘
 │ -cache           │
 └──────────────────┘
 ```

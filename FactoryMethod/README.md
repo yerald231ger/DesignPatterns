@@ -5,16 +5,16 @@
 ┌──────────────────┐
 │     Client       │
 └──────────────────┘
-         │
+         │ uses
          ↓
 ┌──────────────────┐
-│  ConsoleWriter   │←─────────────────┐
+│  ConsoleWriter   │←─────────────────┐ extends
 │   (Creator)      │                  │
 ├──────────────────┤                  │
 │ +CreateWriter()  │                  │
 │ +WriteToConsole()│                  │
 └──────────────────┘                  │
-         ↑                            │
+         ↑ extends                     │
          │                            │
 ┌──────────────────┐      ┌──────────────────┐
 │ TankConsoleWriter│      │ (Other Writers)  │
@@ -26,12 +26,12 @@
          │ creates
          ↓
 ┌──────────────────┐
-│   IWriter        │←─────────────────┐
+│   IWriter        │←─────────────────┐ implements
 │   (Product)      │                  │
 ├──────────────────┤                  │
 │ +Write()         │                  │
 └──────────────────┘                  │
-         ↑                            │
+         ↑ implements                 │
          │                            │
 ┌──────────────────┐      ┌──────────────────┐
 │  TankWriter      │      │ (Other Products) │

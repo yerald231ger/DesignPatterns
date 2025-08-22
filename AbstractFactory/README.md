@@ -5,28 +5,28 @@
 ┌──────────────────┐
 │     Client       │
 └──────────────────┘
-         │
-         v
+         │ uses
+         ↓
 ┌──────────────────┐
-│ IReporterFactory │←─────────────────┐
+│ IReporterFactory │←─────────────────┐ implements
 ├──────────────────┤                  │
 │ +CreateTankReporter()│               │
 └──────────────────┘                  │
-         ↑                            │
+         ↑ implements                 │
          │                            │
 ┌──────────────────┐      ┌──────────────────┐
 │ ReporterFactory  │      │ (Future Factories)│
 ├──────────────────┤      ├──────────────────┤
 │ +CreateTankReporter()│   │ +CreateReporters()│
 └──────────────────┘      └──────────────────┘
-         │
-         v
+         │ creates
+         ↓
 ┌──────────────────┐
-│ ITankReporter    │←─────────────────┐
+│ ITankReporter    │←─────────────────┐ implements
 ├──────────────────┤                  │
 │ +GenerateReport()│                  │
 └──────────────────┘                  │
-         ↑                            │
+         ↑ implements                 │
          │                            │
 ┌──────────────────┐      ┌──────────────────┐
 │ TankReporter     │      │ (Future Reporters)│
