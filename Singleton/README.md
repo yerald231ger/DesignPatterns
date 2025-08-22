@@ -2,37 +2,37 @@
 
 ## Structure
 ```
-+------------------+
-|     Client       |
-+------------------+
-         |
+┌─────────────────┐
+│    Client       │
+└─────────────────┘
+         │
          v
-+------------------+
-|    PricePool     |
-|------------------|
-| -instance        |
-| -prices[]        |
-| +GetInstance()   |
-| +GetPrice()      |
-| +UpdatePrice()   |
-+------------------+
+┌──────────────────┐
+│    PricePool     │
+├──────────────────┤
+│ -instance        │
+│ -prices[]        │
+│ +GetInstance()   │
+│ +GetPrice()      │
+│ +UpdatePrice()   │
+└──────────────────┘
          ^
-         |
-         | only one instance
-         |
-+------------------+
-| Global Price     |
-| Management       |
-+------------------+
+         │
+         │ only one instance
+         │
+┌──────────────────┐
+│ Global Price     │
+│ Management       │
+└──────────────────┘
 ```
 
 ## Thread-Safe Implementation:
 ```
 Thread A            Thread B
-    |                  |
+    │                  │
     v                  v
 GetInstance()     GetInstance()
-    |                  |
+    │                  │
     +---> Same Instance <---+
 ```
 
