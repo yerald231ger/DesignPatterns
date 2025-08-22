@@ -2,36 +2,36 @@
 
 ## Structure
 ```
-+------------------+
-|     Client       |
-+------------------+
-         |
-         v
-+------------------+
-|IGasStationService|<-----------------+
-|------------------|                  |
-| +PerformService()|                  |
-+------------------+                  |
-         ^                            |
-         |                            |
-+------------------+      +------------------+
-|   FuelDispense   |      |BaseServiceDecorator|
-|   (ConcreteComp) |      |   (Decorator)    |
-|------------------|      |------------------|
-| +PerformService()|      | +PerformService()|
-+------------------+      | -component       |
-                          +------------------+
-                                   ^
-                                   |
-         +-------------------------+-------------------------+
-         |                                                 |
-+------------------+                        +------------------+
-|FilterChangeDecorator|                     |GasolineAdditive  |
-|------------------|                        |   Decorator      |
-| +PerformService()|                        |------------------|
-| +ChangeFilter()  |                        | +PerformService()|
-+------------------+                        | +AddAdditive()   |
-                                           +------------------+
+┌──────────────────┐
+│     Client       │
+└──────────────────┘
+         │
+         ↓
+┌──────────────────┐
+│IGasStationService│←─────────────────┐
+├──────────────────┤                  │
+│ +PerformService()│                  │
+└──────────────────┘                  │
+         ↑                            │
+         │                            │
+┌──────────────────┐      ┌──────────────────┐
+│   FuelDispense   │      │BaseServiceDecorator│
+│   (ConcreteComp) │      │   (Decorator)    │
+├──────────────────┤      ├──────────────────┤
+│ +PerformService()│      │ +PerformService()│
+└──────────────────┘      │ -component       │
+                          └──────────────────┘
+                                   ↑
+                                   │
+         ┌─────────────────────────┼─────────────────────────┐
+         │                                                 │
+┌──────────────────┐                        ┌──────────────────┐
+│FilterChangeDecorator│                     │GasolineAdditive  │
+├──────────────────┤                        │   Decorator      │
+│ +PerformService()│                        ├──────────────────┤
+│ +ChangeFilter()  │                        │ +PerformService()│
+└──────────────────┘                        │ +AddAdditive()   │
+                                           └──────────────────┘
 ```
 
 ## Explanation:

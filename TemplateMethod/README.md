@@ -2,36 +2,36 @@
 
 ## Structure
 ```
-+------------------+
-|     Client       |
-+------------------+
-         |
-         v
-+------------------+
-|DefaultTemplateMethod|<-----------------+
-|   (AbstractClass)|                     |
-|------------------|                     |
-| +GenerateQuote() |                     |
-| +SetupConfig()   |                     |
-| +Calculate()     |                     |
-| +FormatOutput()  |                     |
-+------------------+                     |
-         ^                               |
-         |                               |
-+------------------+      +------------------+
-|   BasicQuote     |      |   PineQuote      |
-|------------------|      |------------------|
-| +SetupConfig()   |      | +SetupConfig()   |
-| +Calculate()     |      | +Calculate()     |
-| +FormatOutput()  |      | +FormatOutput()  |
-+------------------+      +------------------+
-                                    |
-                          +------------------+
-                          | CherryDynamicQuote|
-                          |------------------|
-                          | +SetupConfig()   |
-                          | +Calculate()     |
-                          +------------------+
+┌──────────────────┐
+│     Client       │
+└──────────────────┘
+         │
+         ↓
+┌──────────────────┐
+│DefaultTemplateMethod│←─────────────────────┐
+│   (AbstractClass)│                     │
+├──────────────────┤                     │
+│ +GenerateQuote() │                     │
+│ +SetupConfig()   │                     │
+│ +Calculate()     │                     │
+│ +FormatOutput()  │                     │
+└──────────────────┘                     │
+         ↑                               │
+         │                               │
+┌──────────────────┐      ┌──────────────────┐
+│   BasicQuote     │      │   PineQuote      │
+├──────────────────┤      ├──────────────────┤
+│ +SetupConfig()   │      │ +SetupConfig()   │
+│ +Calculate()     │      │ +Calculate()     │
+│ +FormatOutput()  │      │ +FormatOutput()  │
+└──────────────────┘      └──────────────────┘
+                                    │
+                          ┌──────────────────┐
+                          │ CherryDynamicQuote│
+                          ├──────────────────┤
+                          │ +SetupConfig()   │
+                          │ +Calculate()     │
+                          └──────────────────┘
 ```
 
 ## Template Method Flow:

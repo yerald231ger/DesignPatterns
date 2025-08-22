@@ -2,48 +2,48 @@
 
 ## Structure
 ```
-+------------------+
-|     Client       |
-+------------------+
-         |
-         v
-+------------------+
-|      Tank        |
-|   (Context)      |
-|------------------|
-| +Calculate()     |
-| +SetStrategy()   |
-| -strategy        |
-+------------------+
-         |
-         | uses
-         v
-+------------------+
-|ICalculateTcStrategy|<-----------------+
-|   (Strategy)     |                   |
-|------------------|                   |
-| +Calculate()     |                   |
-+------------------+                   |
-         ^                             |
-         |                             |
-+------------------+      +------------------+
-| GasolineStrategy |      | DieselStrategy   |
-|------------------|      |------------------|
-| +Calculate()     |      | +Calculate()     |
-+------------------+      +------------------+
-                                    |
-                          +------------------+
-                          | EthanolStrategy  |
-                          |------------------|
-                          | +Calculate()     |
-                          +------------------+
+┌──────────────────┐
+│     Client       │
+└──────────────────┘
+         │
+         ↓
+┌──────────────────┐
+│      Tank        │
+│   (Context)      │
+├──────────────────┤
+│ +Calculate()     │
+│ +SetStrategy()   │
+│ -strategy        │
+└──────────────────┘
+         │
+         │ uses
+         ↓
+┌──────────────────┐
+│ICalculateTcStrategy│←─────────────────┐
+│   (Strategy)     │                   │
+├──────────────────┤                   │
+│ +Calculate()     │                   │
+└──────────────────┘                   │
+         ↑                             │
+         │                             │
+┌──────────────────┐      ┌──────────────────┐
+│ GasolineStrategy │      │ DieselStrategy   │
+├──────────────────┤      ├──────────────────┤
+│ +Calculate()     │      │ +Calculate()     │
+└──────────────────┘      └──────────────────┘
+                                    │
+                          ┌──────────────────┐
+                          │ EthanolStrategy  │
+                          ├──────────────────┤
+                          │ +Calculate()     │
+                          └──────────────────┘
 ```
 
 ## Strategy Selection:
 ```
-ProductType.Gasoline  ---> GasolineStrategy
-ProductType.Diesel    ---> DieselStrategy
-ProductType.Ethanol   ---> EthanolStrategy
+ProductType.Gasoline  ───> GasolineStrategy
+ProductType.Diesel    ───> DieselStrategy
+ProductType.Ethanol   ───> EthanolStrategy
 ```
 
 ## Explanation:

@@ -2,48 +2,48 @@
 
 ## Structure
 ```
-+------------------+
-|     Client       |
-+------------------+
-         |
-         v
-+------------------+
-|    Caretaker     |
-|------------------|
-| +Backup()        |
-| +Restore()       |
-| -mementos[]      |
-+------------------+
-         |
-         v
-+------------------+
-|    Station       |<-----------------+
-|   (Originator)   |                  |
-|------------------|                  |
-| +CreateMemento() |                  |
-| +RestoreMemento()|                  |
-| -state           |                  |
-+------------------+                  |
-         |                            |
-         | creates                    |
-         v                            |
-+------------------+      +------------------+
-|    IMemento      |      | ConcreteMemento  |
-|   (Interface)    |      |------------------|
-|------------------|      | +GetState()      |
-| +GetState()      |      | -state           |
-+------------------+      +------------------+
+┌──────────────────┐
+│     Client       │
+└──────────────────┘
+         │
+         ↓
+┌──────────────────┐
+│    Caretaker     │
+├──────────────────┤
+│ +Backup()        │
+│ +Restore()       │
+│ -mementos[]      │
+└──────────────────┘
+         │
+         ↓
+┌──────────────────┐
+│    Station       │←─────────────────┐
+│   (Originator)   │                  │
+├──────────────────┤                  │
+│ +CreateMemento() │                  │
+│ +RestoreMemento()│                  │
+│ -state           │                  │
+└──────────────────┘                  │
+         │                            │
+         │ creates                    │
+         ↓                            │
+┌──────────────────┐      ┌──────────────────┐
+│    IMemento      │      │ ConcreteMemento  │
+│   (Interface)    │      ├──────────────────┤
+├──────────────────┤      │ +GetState()      │
+│ +GetState()      │      │ -state           │
+└──────────────────┘      └──────────────────┘
 ```
 
 ## State Snapshot Example:
 ```
 Station State:
-+------------------+
-| TankLevels[]     |
-| PumpStatus[]     |
-| AlarmStates[]    |
-| Timestamp        |
-+------------------+
+┌──────────────────┐
+│ TankLevels[]     │
+│ PumpStatus[]     │
+│ AlarmStates[]    │
+│ Timestamp        │
+└──────────────────┘
 ```
 
 ## Explanation:

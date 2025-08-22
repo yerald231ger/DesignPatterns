@@ -2,48 +2,48 @@
 
 ## Structure
 ```
-+------------------+
-|     Client       |
-+------------------+
-         |
+┌──────────────────┐
+│     Client       │
+└──────────────────┘
+         │
          v
-+------------------+
-| FlyWeightFactory |
-|------------------|
-| +GetFlyWeight()  |
-| -flyweights{}    |
-+------------------+
-         |
-         | creates/manages
+┌──────────────────┐
+│ FlyWeightFactory │
+├──────────────────┤
+│ +GetFlyWeight()  │
+│ -flyweights{}    │
+└──────────────────┘
+         │
+         │ creates/manages
          v
-+------------------+
-|    FlyWeight     |<-----------------+
-|------------------|                  |
-| -productName     |                  |
-| -productColor    |                  | shared
-| -pricePerLiter   |                  | instances
-+------------------+                  |
-         ^                            |
-         |                            |
-         | uses                       |
-+------------------+      +------------------+
-|   FuelSale       |      |   FuelSale       |
-|------------------|      |------------------|
-| +Amount (extrinsic)|     | +Amount (extrinsic)|
-| +Volume (extrinsic)|     | +Volume (extrinsic)|
-| +SaleDate (extrinsic)|   | +SaleDate (extrinsic)|
-+------------------+      +------------------+
+┌──────────────────┐
+│    FlyWeight     │←─────────────────┐
+├──────────────────┤                  │
+│ -productName     │                  │
+│ -productColor    │                  │ shared
+│ -pricePerLiter   │                  │ instances
+└──────────────────┘                  │
+         ↑                            │
+         │                            │
+         │ uses                       │
+┌──────────────────┐      ┌──────────────────┐
+│   FuelSale       │      │   FuelSale       │
+├──────────────────┤      ├──────────────────┤
+│ +Amount (extrinsic)│     │ +Amount (extrinsic)│
+│ +Volume (extrinsic)│     │ +Volume (extrinsic)│
+│ +SaleDate (extrinsic)│   │ +SaleDate (extrinsic)│
+└──────────────────┘      └──────────────────┘
 ```
 
 ## Intrinsic vs Extrinsic State:
 ```
 Intrinsic (Shared):        Extrinsic (Context):
-+-----------------+        +------------------+
-| Product Name    |        | Sale Amount      |
-| Product Color   |        | Sale Volume      |
-| Price per Liter |        | Sale Date        |
-+-----------------+        | Customer ID      |
-                          +------------------+
+┌─────────────────┐        ┌──────────────────┐
+│ Product Name    │        │ Sale Amount      │
+│ Product Color   │        │ Sale Volume      │
+│ Price per Liter │        │ Sale Date        │
+└─────────────────┘        │ Customer ID      │
+                          └──────────────────┘
 ```
 
 ## Explanation:
