@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using FactoryMethod.Pattern;
+﻿using FactoryMethod.Pattern;
 
 var factories = TankConsoleWriter.GetTankConsoleWriters();
 

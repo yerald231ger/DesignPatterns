@@ -1,53 +1,44 @@
-﻿using System.Text.Json;
-using Memento;
+﻿using Memento;
 using Memento.Pattern;
 
-var caretaker = new Caretaker("Station 1");
+Console.WriteLine("=== Tank Calibration using Memento Pattern ===\n");
 
-var tank1 = new Tank { Code = "T1", Volume = 1000, Product = Product.Magna };
-var tank2 = new Tank { Code = "T2", Volume = 2000, Product = Product.Premium };
+var tankCalibration = new TankCalibration { TankId = "TANK-001" };
+var caretaker = new CalibrationCaretaker(tankCalibration);
 
-var hose1 = new Hose("H1");
-var hose2 = new Hose("H2");
-var hose3 = new Hose("H3");
-var hose4 = new Hose("H4");
+Console.WriteLine("Starting tank calibration process...");
+tankCalibration.DisplayStatus();
 
-var pump1 = new Pump("P1");
-var pump2 = new Pump("P2");
+Console.WriteLine("\n--- Adding calibration points ---");
+caretaker.SaveState();
+tankCalibration.AddCalibrationPoint(10, 500);
+tankCalibration.AddCalibrationPoint(20, 1200);
+tankCalibration.SetCurrentHeight(15);
 
-var dispenser1 = new Dispenser("D1");
+tankCalibration.DisplayStatus();
 
-caretaker.SetTankToHose(hose1, tank1);
-caretaker.SetTankToHose(hose2, tank2);
+Console.WriteLine("\n--- Adding more points ---");
+caretaker.SaveState();
+tankCalibration.AddCalibrationPoint(30, 2100);
+tankCalibration.AddCalibrationPoint(40, 3200);
+tankCalibration.SetCurrentHeight(35);
 
-caretaker.SetTankToHose(hose3, tank1);
-caretaker.SetTankToHose(hose4, tank2);
+tankCalibration.DisplayStatus();
 
-caretaker.SetHoseToPump(pump1, hose1);
-caretaker.SetHoseToPump(pump1, hose2);
-
-caretaker.SetHoseToPump(pump2, hose3);
-caretaker.SetHoseToPump(pump2, hose4);
-
-caretaker.SetPumpToDispenser(dispenser1, pump1);
-caretaker.SetPumpToDispenser(dispenser1, pump2);
-
-caretaker.AddTank(tank1);
-caretaker.AddTank(tank2);
-caretaker.AddDispenser(dispenser1);
-
-var station = caretaker.GetStation();
-
-Console.WriteLine(JsonSerializer.Serialize(station));
-
-caretaker.RemoveTank(tank2);
-
-var station2 = caretaker.GetStation();
-
-Console.WriteLine(JsonSerializer.Serialize(station2));
-
+Console.WriteLine("\n--- Oops! Wrong measurement, let's undo ---");
 caretaker.Undo();
+tankCalibration.DisplayStatus();
 
-var station3 = caretaker.GetStation();
+Console.WriteLine("\n--- Let's try again with correct values ---");
+caretaker.SaveState();
+tankCalibration.AddCalibrationPoint(30, 2000);
+tankCalibration.AddCalibrationPoint(40, 3000);
+tankCalibration.SetCurrentHeight(32);
 
-Console.WriteLine(JsonSerializer.Serialize(station3));
+tankCalibration.DisplayStatus();
+
+Console.WriteLine("\n--- Another mistake, undo again ---");
+caretaker.Undo();
+tankCalibration.DisplayStatus();
+
+Console.WriteLine($"\nCalibration complete! We have {caretaker.SavedStatesCount} saved states remaining.");
